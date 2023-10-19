@@ -22,7 +22,7 @@ packaging==23.1
 PyJWT==2.7.0
 python-dotenv==0.21.1
 pytz==2023.3
-referencing==0.30.2
+referencing==0.8.9
 rpds-py==0.10.4
 SQLAlchemy==2.0.12
 typing_extensions==4.5.0
