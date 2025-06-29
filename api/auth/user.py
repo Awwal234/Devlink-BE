@@ -12,6 +12,7 @@ signup_model = user_namespace.model('SIGNUPUSER', {
     'id': fields.Integer(),
     'email': fields.String(required=True, description='user email'),
     'password': fields.String(required=True, description='user password'),
+    'fullname': fields.String(required=False, description='user full name'),
 })
 
 login_model = user_namespace.model('LOGINUSER', {
@@ -31,6 +32,7 @@ class SIGNUP(Resource):
         data = request.get_json()
         email = data['email']
         password = data['password']
+        fullname = data.get('fullname', None)
 
         user_exist = User.query.filter_by(email=email).first()
         if (user_exist is not None) and user_exist.password is not None:
@@ -40,11 +42,11 @@ class SIGNUP(Resource):
 
             return response, HTTPStatus.UNAUTHORIZED
         else:
-            new_user = User(email=email, password=generate_password_hash(password))
+            new_user = User(email=email, password=generate_password_hash(password), fullname=fullname)
             new_user.save()
 
             return new_user, HTTPStatus.CREATED
-        
+
 
 @user_namespace.route('/login')
 class LOGIN(Resource):
@@ -75,7 +77,7 @@ class LOGIN(Resource):
                 "message": 'Invalid credentials submitted'
             }
             return response, HTTPStatus.UNAUTHORIZED
-        
+
 @user_namespace.route('/refresh')
 class REFRESHTOKEN(Resource):
     @jwt_required(refresh=True)
@@ -93,7 +95,7 @@ class REFRESHTOKEN(Resource):
         }
 
         return response, HTTPStatus.OK
-    
+
 @user_namespace.route('/me')
 class GETUSER(Resource):
     @jwt_required()
@@ -106,6 +108,7 @@ class GETUSER(Resource):
 
         response = {
             'email': user_check.email,
+            'fullname': user_check.fullname,
         }
 
         return response, HTTPStatus.OK
