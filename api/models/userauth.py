@@ -17,5 +17,5 @@ class User(db.Model):
         return f"User('{self.fullname}')"
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        db.session.add(self)  # type: ignore
+        db.session.commit()  # type: ignore
