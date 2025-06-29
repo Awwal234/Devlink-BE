@@ -106,6 +106,9 @@ class GETUSER(Resource):
         current_user = get_jwt_identity()
         user_check = User.query.filter_by(email=current_user).first()
 
+        if not user_check:
+            return {'message': 'User not found'}, HTTPStatus.NOT_FOUND
+
         response = {
             'email': user_check.email,
             'fullname': user_check.fullname,

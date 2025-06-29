@@ -8,6 +8,11 @@ class User(db.Model):
     fullname = db.Column(db.String(100), nullable=True)
     link = db.relationship('Link', backref='links', lazy=True)
 
+    def __init__(self, email, password, fullname=None):
+        self.email = email
+        self.password = password
+        self.fullname = fullname
+
     def __repr__(self):
         return f"User('{self.fullname}')"
 
